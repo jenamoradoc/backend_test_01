@@ -1,0 +1,22 @@
+{
+  "name": "ga_webback",
+  "version": "1.0.0",
+  "description": "gA web BackEnd Developed with NodeJs & Postgresql",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Nodejs",
+    "PostgreSql"
+  ],
+  "author": "David HND",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "nodemon": "^1.17.3",
+    "passport": "^0.4.0",
+    "pg-promise": "^8.2.2"
+  }
+}

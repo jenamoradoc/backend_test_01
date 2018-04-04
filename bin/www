@@ -1,0 +1,22 @@
+'use strict'
+
+var app = require('../app');
+var debug = require('debug')('nodeapp:server');
+var http = require('http');
+
+// Get port from enviroment store in express
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+var server = http.createServer(app);
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListenig);
+
+//Normalize a port into a number, string, or false.
+
+function normalize(val){
+  var port = PAse
+}

@@ -1,2 +1,2 @@
 # gAweb2_back
-gA web backend debeloped using nodejs &amp; postgresql
+gA web backend developed using nodejs &amp; postgresql

@@ -16,7 +16,7 @@ const initOptions = {
 const pgp = require('pg-promise')(initOptions);
 var config = require('config');
 
-var dbConfig = config.get('debConfig'); // from default json
+var dbConfig = config.get('dbConfig'); // from default json
 const db = pgp(dbConfig);
 
 db.connect()
@@ -28,4 +28,3 @@ db.connect()
     });
 
 module.exports = db;
-    

@@ -1,0 +1,10 @@
+{
+    "dbConfig": {
+      "host": "assa38",
+      "port": 5432,
+      "schema": "gAweb",
+      "database":"postgres",
+      "user": "postgres",
+      "password":"assa2017"
+    }
+}

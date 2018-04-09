@@ -1,6 +1,6 @@
 var db = require('../db');
 var config = require('config');
-var dbConfig = config.ger('dbConfig');
+var dbConfig = config.get('dbConfig');
 
 /*************************************************
 
@@ -114,55 +114,77 @@ function updateUser(req, res, next) {
   })
 }
 
-function removeUser(req, res, next){
+function removeUser(req, res, next) {
   var empID = parseInt(req.params.id);
-  db.result('delete from'+ dbConfig.schema + '.empleados where id=$1');
-    .then(function (result){
+  db.result('delete from '+ dbConfig.schema + '.empleados where id = $1', empID)
+    .then(function (result) {
       res.status(200)
-      .send({
-        status:'sucess',
-        message: `Removed ${result.rowCount} user`
-      });
+        .send({
+          status: 'success',
+          message: `Removed ${result.rowCount} user`
+        });
     })
     .catch(function (err)
     {
-      if(err.recived ==0)
+      if(err.received == 0)
       {
-        res.status(404).send({message:'No se ha borrado correctamente el Usuario'});
+        res.status(404).send({message: 'No se ha borrado el usuario'});
         console.log(err);
       }else{
-        res.status(500).send({message:'Error en el Servidor'});
+        res.status(500).send({message:'Error en el servidor'+err});
       }
     });
 }
 
-function removeAll(req, res, next){
+function removeAll(req, res, next) {
   var ini=parseInt(req.params.ini);
   var fin=parseInt(req.params.fin);
   var text;
     if (ini > fin){
       ini=fin;
-      fin=parseInt(req.params.ini)
+      fin=parseInt(req.params.ini);
     }
     for (var paso = ini; paso >= fin; paso++) {
 
-      db.result('delete from '+ dbConfig.schema + 'where empleados = $1', paso)
-        .then(function (result){
+      db.result('delete from '+ dbConfig.schema + '.empleados where id = $1', paso)
+        .then(function (result) {
           console.log({
-            status:'succes',
-            message: `Removed ${result.rowCount} user`
-          });
+              status: 'success',
+              message: `Removed ${result.rowCount} user`
+            });
         })
-        .catch(function(err){
-          console.log({
-            message:'No se han borrado los usuarios'
-            err:err
-          });
-        }else{
-          console.log('Error en el servidor');
-        }
-      });
+        .catch(function (err){
+          if(err.received == 0)
+          {
+            console.log({
+              message: 'No se ha borrado el usuario',
+              err:err
+            });
+          }else{
+            console.log('Error en el servidor');
+          }
+        });
     };
     res.send({text});
 }
-k
+
+function existe(user, callback){
+  db.one('select * from'+ dbConfig.schema+ 'empleados wher nombre =1$ and apellido =2$,'[user.nombre, user.apeellido])
+    .then(function (data)
+    {
+      callback(parseInt(dat.id));
+    })
+    .catch(function (err)
+    {
+      callback(null)
+    })
+}
+
+module.exports = {
+  getAllUsers,
+  getSingleUser,
+  createUser,
+  updateUser,
+  removeUser,
+
+}

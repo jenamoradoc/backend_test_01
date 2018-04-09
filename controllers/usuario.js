@@ -9,7 +9,7 @@ var dbConfig = config.get('dbConfig');
 
 function logdb(){
   return new Promise((resolve, reject) =>{
-    db.one('select * from '+ dbConfig.schema + 'La busqueda a realizarse de la db, / usuario = $1', users)
+    db.one('select * from '+ dbConfig.schema + '.empleados where usuario = $1', users)
     .then(function(data){
         resolve(data);
     })
@@ -20,31 +20,63 @@ function logdb(){
 }
 
 //================== authentication ==============
+function loginUser(req, res){
+     var params  = req.body;
 
-function logingUser(req, res){
+     var email = params.email;
+     var password = params.password;
+
+     User.findOne({email: email.toLowerCase()}, (err, user) => {
+       if(err){
+         res.status(500).send({message: 'Error en la peticion'});
+       }else{
+         if(!user){
+           res.status(404).send({message: 'El usuario no existe'});
+         }else{
+
+           //comprobar la comtraseña
+           bcrypt.compare(password, user.password, function (err, check) {
+             if(check){
+               //devolver los datos del usuario logueado
+               if(params.gethash){
+                 //devolver un token de jwt
+                 res.status(200).send({
+                   token: jwt.createToken(user)
+                 });
+               }else{
+                 res.status(200).send({user});
+               }
+             }else{
+               res.status(404).send({message: 'El usuario no ha podido logearse '+check})
+             }
+           });
+         }
+       }
+     });
+}
+
+/*function logingUser(req, res){
 
   var params = req.body;
 
   var username = params.user;
   var password = params.pass;
 
-  logdb(params.user)
-    .then(function(data){
+  logdb(params.user, params.pass, function(data){
+    if (data ==0){
+      res.status(404).send({message: 'Usuario o contraseña incorrecta'});
+      return;
+    }else{
       res.status(200).send({
-        message:'Authenticated'
-        token: jwt.createToken(data),
-        user: data
+          message: 'Authenticated!',
+          token: jwt.createToken(data),
+          user: data
       });
-    }).catch((error) =>{
-      if(error.recived==0){
-        res.status(404).send({message: 'Not found data'})
-      }else{
-        res.status(404).send({message:'Error del Sistema: '+err})}
-    });
-  }else{
-    res.status(400).send({message:'Authentication Failed!'});
-  }
+    }
+  });
+}*/
+
 
 module.exports = {
-  logingUser,
+  loginUser,
 };

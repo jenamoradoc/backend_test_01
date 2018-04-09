@@ -87,7 +87,7 @@ function insertar(user,callback){
       })
 }
 
-function actulizar(user,id,callback){
+function actualizar(user,id,callback){
   db.none('update'+ dbConfig.schema + '.empleados set nombre=$1, apellido=$2, usuario=$3, rol_id=$4 where id=$5',
   [user.nombre, user.apellido, user.usuario, user.rol_id,
     id])
@@ -113,3 +113,56 @@ function updateUser(req, res, next) {
       res.send({data: data});
   })
 }
+
+function removeUser(req, res, next){
+  var empID = parseInt(req.params.id);
+  db.result('delete from'+ dbConfig.schema + '.empleados where id=$1');
+    .then(function (result){
+      res.status(200)
+      .send({
+        status:'sucess',
+        message: `Removed ${result.rowCount} user`
+      });
+    })
+    .catch(function (err)
+    {
+      if(err.recived ==0)
+      {
+        res.status(404).send({message:'No se ha borrado correctamente el Usuario'});
+        console.log(err);
+      }else{
+        res.status(500).send({message:'Error en el Servidor'});
+      }
+    });
+}
+
+function removeAll(req, res, next){
+  var ini=parseInt(req.params.ini);
+  var fin=parseInt(req.params.fin);
+  var text;
+    if (ini > fin){
+      ini=fin;
+      fin=parseInt(req.params.ini)
+    }
+    for (var paso = ini; paso >= fin; paso++) {
+
+      db.result('delete from '+ dbConfig.schema + 'where empleados = $1', paso)
+        .then(function (result){
+          console.log({
+            status:'succes',
+            message: `Removed ${result.rowCount} user`
+          });
+        })
+        .catch(function(err){
+          console.log({
+            message:'No se han borrado los usuarios'
+            err:err
+          });
+        }else{
+          console.log('Error en el servidor');
+        }
+      });
+    };
+    res.send({text});
+}
+k

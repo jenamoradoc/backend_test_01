@@ -15,6 +15,8 @@ router.delete('/gAweb/empleados', empleados.removeUser);
 
 var log = require('../controllers/usuario');
 
-router.post('/gAweb/loguear', log.loginUser);
+router.post('/gAweb/loguear', log.login);
 
 module.exports = router;
+
+//nada que ver de aqui para abajo solo estoy probando -->

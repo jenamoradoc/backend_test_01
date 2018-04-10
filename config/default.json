@@ -1,7 +1,7 @@
 {
     "dbConfig": {
       "host": "assa38",
-      "port": 5432,
+      "port": 5433,
       "schema": "gAweb",
       "database":"postgres",
       "user": "postgres",

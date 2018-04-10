@@ -12,7 +12,7 @@ Info de las tablas
 
 //====================Get users ======================
 function getAllUsers(req, res){
-  db.many('select * from '+ dbConfig.schema + '.empleados')
+  db.many('select * from '+ dbConfig.schema + '.usuarios')
     .then(function(data){
       res.status(200).send({
         data:data
@@ -30,7 +30,7 @@ function getAllUsers(req, res){
 
 function getSingleUser(req,res, next){
   var empID = req.params.id;
-  db.one('select * from'+ dbConfig.schema + '.emplados wher id =$1', empID)
+  db.one('select * from'+ dbConfig.schema + '.usuarios where id =$1', empID)
     .then(function (data)
     {
       res.status(200)
@@ -66,7 +66,7 @@ function createUser(req, res, next){
 }
 
 function insertar(user,callback){
-    db.none('insert into '+ dbConfig.schema + '.empleados(nombre, apellido, usuario, rol_id) ' +
+    db.none('insert into '+ dbConfig.schema + '.usuario(nombre, apellido, usuario, rol_id)' +
         'values($1, $2, $3, $4)',
       [user.nombre, user.apellido, user.usuario, user.rol_id])
       .then(function () {
@@ -88,7 +88,7 @@ function insertar(user,callback){
 }
 
 function actualizar(user,id,callback){
-  db.none('update'+ dbConfig.schema + '.empleados set nombre=$1, apellido=$2, usuario=$3, rol_id=$4 where id=$5',
+  db.none('update'+ dbConfig.schema + '.usuarios set nombre=$1, apellido=$2, usuario=$3, rol_id=$4 where id=$5',
   [user.nombre, user.apellido, user.usuario, user.rol_id,
     id])
     .then(function(){
@@ -116,7 +116,7 @@ function updateUser(req, res, next) {
 
 function removeUser(req, res, next) {
   var empID = parseInt(req.params.id);
-  db.result('delete from '+ dbConfig.schema + '.empleados where id = $1', empID)
+  db.result('delete from '+ dbConfig.schema + '.usuarios where id = $1', empID)
     .then(function (result) {
       res.status(200)
         .send({
@@ -146,7 +146,7 @@ function removeAll(req, res, next) {
     }
     for (var paso = ini; paso >= fin; paso++) {
 
-      db.result('delete from '+ dbConfig.schema + '.empleados where id = $1', paso)
+      db.result('delete from '+ dbConfig.schema + '.usuarios where id = $1', paso)
         .then(function (result) {
           console.log({
               status: 'success',
@@ -169,7 +169,7 @@ function removeAll(req, res, next) {
 }
 
 function existe(user, callback){
-  db.one('select * from'+ dbConfig.schema+ 'empleados wher nombre =1$ and apellido =2$,'[user.nombre, user.apeellido])
+  db.one('select * from'+ dbConfig.schema+ 'usuarios where nombre =1$ and apellido =2$,'[user.nombre, user.apeellido])
     .then(function (data)
     {
       callback(parseInt(dat.id));

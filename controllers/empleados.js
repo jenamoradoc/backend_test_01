@@ -4,10 +4,13 @@ var dbConfig = config.get('dbConfig');
 
 /*************************************************
 
-Info de las tablas
+Info de las tabla Usuarios
 ***************************************************
-
-
+ID
+nombre
+apellido
+usuario
+rol_id
 **************************************************/
 
 //====================Get users ======================

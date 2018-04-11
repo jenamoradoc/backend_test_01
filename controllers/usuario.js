@@ -19,10 +19,10 @@ var dbConfig = config.get('dbConfig');
   });
 }*/
 
-function logindb(user, pass, callback) {
+function logdb(user, pass, callback) {
   db.one('select * from '+ dbConfig.schema + '.usuarios where usuario = $1',user)
     .then(function(data){
-        callback(data);
+        resolve(data);
     })
     .catch(function(err) {
         callback(err.received); //devuelve 0

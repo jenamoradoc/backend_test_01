@@ -12,7 +12,7 @@ var app = express();
 //Set cots header and intercept "Options" preflight from call of Angularjs
 var allowCrossDomain = function(req, res, next){
     res.header('Access-Control-Allow-Origin','*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUt,POST,DELETE');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-type');
     if (req.method == "Options")
         res.sendStatus(200);

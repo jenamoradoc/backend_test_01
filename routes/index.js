@@ -7,11 +7,11 @@ router.get('/', function(req, res, next) {
 });
 
 var empleados = require('../controllers/empleados');
-router.get('/gAweb/empleados', empleados.getAllUsers);
-router.get('/gAweb/empleados/:usuario', empleados.getSingleUser);
-router.post('/gAweb/empleados', empleados.createUser);
-router.put('/gAweb/empleados', empleados.updateUser);
-router.delete('/gAweb/empleados', empleados.removeUser);
+router.get('/gaweb/usuarios', empleados.getAllUsers);
+router.get('/gaweb/usuarios/:usuario', empleados.getSingleUser);
+router.post('/gaweb/usuarios', empleados.createUser);
+router.put('/gaweb/usuarios', empleados.updateUser);
+router.delete('/gaweb/usuarios', empleados.removeUser);
 
 var log = require('../controllers/usuario');
 

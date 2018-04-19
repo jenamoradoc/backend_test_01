@@ -7,15 +7,22 @@ router.get('/', function(req, res, next) {
 });
 
 var empleados = require('../controllers/empleados');
-router.get('/gaweb/usuarios', empleados.getAllUsers);
-router.get('/gaweb/usuarios/:usuario', empleados.getSingleUser);
-router.post('/gaweb/usuarios', empleados.createUser);
-router.put('/gaweb/usuarios', empleados.updateUser);
-router.delete('/gaweb/usuarios', empleados.removeUser);
+router.get('/gaweb/usuarios', empleados.getAllUsers); //muestra todos los usuarios
+router.get('/gaweb/usuarios/:id', empleados.getSingleUser);//muestra un solo usuario
+router.post('/gaweb/createuser', empleados.saveUSer);//crea un nuevo usuario
+router.put('/gaweb/update', empleados.updateUser);// actualiza un usuario
+router.delete('/gaweb/usuarios/:id', empleados.removeUser);//Elimina el empleado correspondiente al id dado
 
-var log = require('../controllers/usuario');
+//============Login===========================================
+var log = require('../controllers/user');
+router.post('/gaweb/loguear', log.loginUser);
 
-router.post('/gAweb/loguear', log.login);
+//============Send Mail=======================================
+var nodemailer = require('../mailer/mailer-module')
+router.post('/gaweb/sendmail', nodemailer.SendMail);
+
+
+
 
 module.exports = router;
 

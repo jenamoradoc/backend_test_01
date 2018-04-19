@@ -57,10 +57,13 @@ function getSingleUser(req,res, next){
 
 function createUser(req, res, next){
   var user ={
+    id:req.body.id,
     nombre:req.body.nombre,
     apellido:req.body.apellido,
-    usuario:req.body.usuario,
-    rol_id:req.body.rol_id
+    email:req.body.email,
+    pass:req.body.pass,
+    usuario:req.body.usuario
+
   };
   insertar(user, function(data){
     res.send({data: data});
@@ -69,9 +72,9 @@ function createUser(req, res, next){
 }
 
 function insertar(user,callback){
-    db.none('insert into '+ dbConfig.schema + '.usuario(nombre, apellido, usuario, rol_id)' +
-        'values($1, $2, $3, $4)',
-      [user.nombre, user.apellido, user.usuario, user.rol_id])
+    db.none('insert into '+ dbConfig.schema + '.usuarios(id, nombre, apellido, email, pass, usuario)' +
+        'values($1, $2, $3, $4, $5, $6)',
+      [user.id,user.nombre, user.apellido, user.email, user.pass, user.usuario])
       .then(function () {
 
         var data='Inserción exitosa';
@@ -91,8 +94,8 @@ function insertar(user,callback){
 }
 
 function actualizar(user,id,callback){
-  db.none('update'+ dbConfig.schema + '.usuarios set nombre=$1, apellido=$2, usuario=$3, rol_id=$4 where id=$5',
-  [user.nombre, user.apellido, user.usuario, user.rol_id,
+  db.none('update'+ dbConfig.schema + '.usuarios set id=$1, nombre=$2, apellido=$3, email=$4, pass=$5, usuario=$6',
+  [user.id,user.nombre, user.apellido, user.email, user.pass, user.usuario,
     id])
     .then(function(){
       var data = 'Se logro actulizar exitosamente!'

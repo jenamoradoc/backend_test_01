@@ -1,10 +1,10 @@
 {
     "dbConfig": {
-      "host": "localhost",
-      "port": 5433,
-      "schema": "public",
+      "host": "assa38",
+      "port": 5432,
+      "schema": "gaweb",
       "database":"gaweb",
       "user": "postgres",
-      "password":"casino30"
+      "password":"assa2017"
     }
 }

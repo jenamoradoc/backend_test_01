@@ -1,41 +1,45 @@
-'use strict'
+
+function SendMail(req, res, next) {
 
 var nodemailer = require('nodemailer');
 
-function SendMail(res, req){
-
-  var trasporter = nodemailer.createTrasport({
+// Create the transporter with the required configuration for Outlook
+var transporter = nodemailer.createTransport({
     host: "mail.grupoassa.com", // hostname
-      secureConnection: false, // TLS requires secureConnection to be false
-      port: 25 , // port for secure SMTP
-      tls: {
-         rejectUnauthorized: false
-      },
-      auth: {
-          user: 'jenamorado',
-          pass: 'lampara21'
-      }
-  });
+    secureConnection: false, // TLS requires secureConnection to be false
+    port: 25, // port for secure SMTP
+    tls: {
+       rejectUnauthorized: false
+    },
+    auth: {
+        user: '------',//usuario
+        pass: '------'//password
+    }
+});
 
-  // setup e-mail data
-  var mailOptions = {
-    from: '"David" <jenamorado@grupoassa.com>', // sender address (who sends)
-      to: 'pruebasmail345@gmail.com', // list of receivers (who receives)
-      subject: 'Hello ', // Subject line
-      text: 'Hello world ', // plaintext body
-      html: '<b>Hello world </b><br> This is the first email sent with Nodemailer in Node.js' // html body
-  };
+// setup e-mail data
+var mailOptions = {
+  from: '"gaweb" <jenamorado@grupoassa.com>', // quien envia
+    to: 'lsaenz@grupoassa.com', // quien recibe
+    subject: 'Prueba de Mail ', // Asunto del mail
+    text: 'Esto es un mail de prueba ', // plaintext body
+    html: '<b>Prueba de mail </b><br> Envie este mail con Node' // html body
+};
 
-  //definir obejto a enviar de trasport
-  trasporter.senMail(mailOptions, function(error, info){
+// send mail with defined transport object
+transporter.sendMail(mailOptions, function(error, info){
     if(error){
-      return console.log(error);
+        return console.log(error);
+    }else{
+      res.status(200).send({message:'Mensaje enviado'})
     }
 
     console.log('Message sent: ' + info.response);
-  });
+});
+
 }
 
 module.exports = {
   SendMail,
+
 }

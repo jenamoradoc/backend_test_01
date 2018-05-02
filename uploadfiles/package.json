@@ -1,0 +1,37 @@
+{
+  "name": "a8",
+  "version": "1.0.0",
+  "description": "ga web upload module \u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[, developed in nodejs",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jenamoradoc/uploadfiles_ga.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "David HND",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jenamoradoc/uploadfiles_ga/issues"
+  },
+  "homepage": "https://github.com/jenamoradoc/uploadfiles_ga#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "del": "^3.0.0",
+    "express": "^4.16.3",
+    "lokijs": "^1.5.3",
+    "multer": "^1.3.0"
+  },
+  "devDependencies": {
+    "@types/del": "^3.0.1",
+    "@types/express": "^4.11.1",
+    "@types/lokijs": "^1.5.2",
+    "@types/multer": "^1.3.6",
+    "typescript": "^2.8.3"
+  }
+}

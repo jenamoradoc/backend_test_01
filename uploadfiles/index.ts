@@ -20,7 +20,10 @@ const app = express();
 app.use(cors());
 
 //==============Subir imagen de perfil ===============
+
+
 app.post('/profile', upload.single('avatar'), async (req, res) => {
+   console.log("Aqui tambien");
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
         const data = col.insert(req.file);
@@ -31,7 +34,6 @@ app.post('/profile', upload.single('avatar'), async (req, res) => {
         res.sendStatus(400);
     }
 })
-
 //===========Subir varios Archivos ===================
 app.post('/photos/upload', upload.array('photos', 12), async (req, res) => {  //Permite subir 12 fotos maximo
     try {

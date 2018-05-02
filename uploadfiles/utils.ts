@@ -1,81 +1,31 @@
-//index
+import * as del from 'del';
+import * as Loki from 'lokijs';
 
-import * as express from'express'
-import * as multer from 'multer'
-import * as cors from 'cors'
-import * as fs from 'fs'
-import * as path from 'path'
-import * as Loki from 'lokijs'
-import { imageFilter,loadCollection, cleanFolder} from './utils';
+const loadCollection = function (colName, db: Loki): Promise<Collection<any>> {
+  return new Promise(resolve =>{
+      db.loadDatabase({}, () =>{
+         const _collection = db.getCollection(colName) || db.addCollection(colName);
+         resolve(_collection);
+    })
+  });
+}
 
-//setup db
-const DB_NAME = 'dbjson';
-const COLLECTION_NAME = 'images';
-const UPLOAD_PATH = 'uploads';
-const upload = multer({dest: `${UPLOAD_PATH}/`,fileFilter: imageFilter }); // configuracion de multer//Filtro de selecion
-const db = new Loki(`${UPLOAD_PATH}/${DB_NAME}`, { persistenceMethod: 'fs' });
-
-//setup app
-const app = express();
-app.use(cors());
-
-//==============Subir imagen de perfil ===============
-app.post('/profile', upload.single('avatar'), async (req, res) => {
-    try {
-        const col = await loadCollection(COLLECTION_NAME, db);
-        const data = col.insert(req.file);
-
-        db.saveDatabase();
-        res.send({ id: data.$loki, fileName: data.filename, originalName: data.originalname });
-    } catch (err) {
-        res.sendStatus(400);
+//Filtro para archivos
+const imageFilter = function (req, file, cb) {
+    // accept image only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        return cb(new Error('Only image files are allowed!'), false);
     }
-})
+    cb(null, true);
+};
 
-//===========Subir varios Archivos ===================
-app.post('/photos/upload', upload.array('photos', 12), async (req, res) => {  //Permite subir 12 fotos maximo
-    try {
-        const col = await loadCollection(COLLECTION_NAME, db)
-        let data = [].concat(col.insert(req.files));
+//=======Funcion para limpiar las imagenes subidas durante el Desarollo =======
 
-        db.saveDatabase();
-        res.send(data.map(x => ({ id: x.$loki, fileName: x.filename, originalName: x.originalname })));
-    } catch (err) {
-        res.sendStatus(400);
-    }
-})
+const cleanFolder = function (folderPath){
 
-app.get('/images', async(req, res) => {
-    try{
-      const col = await loadCollection(COLLECTION_NAME, db);
-      res.send(col.data);
-    }catch (err){
-      res.sendStatus(400);
-    }
-})
+   //borra los archivos pero no el folder
+   del.sync([`${folderPath}/**`, `!${folderPath}`]);
+}
 
-//======Busca y devuelme imagen por id ==========
-app.get('/images/:id', async (req, res) => {
-  try{
-    const col = await loadCollection(COLLECTION_NAME, db);
-    const result = col.get(req.params.id);
 
-    if(!result){
-      res.sendStatus(404);
-      return;
-    };
-
-    res.setHeader('Content-Type', result.mimetype);
-    fs.createReadStream(path.join(UPLOAD_PATH, result.filename)).pipe(res);
-  }catch(err){
-    res.sendStatus(400);
-  }
-})
-
-//borrar todos los archivos subidos
-cleanFolder(UPLOAD_PATH);
-
-//======================port=======================
-app.listen(3000, function () {
-    console.log('listening on port 3000!');
-});
+export { imageFilter, loadCollection, cleanFolder}

@@ -14,7 +14,7 @@ router.get('/gaweb/users', empleados.getAllUsers);
 router.get('/gaweb/users/:id', empleados.getSingleUser);
 router.get('/gaweb/users/:id', empleados.getSingleUserName);
 router.post('/gaweb/createuser', empleados.createUser);
-router.put('/gaweb/updateuser', empleados.updateUser);
+router.put('/gaweb/updateser', empleados.updateUser);
 router.delete('/gaweb/usuarios/:id', empleados.removeUser);//Elimina el empleado correspondiente al id dado
 
 //==============LOGIN==========================================
@@ -28,6 +28,10 @@ var nodemailer = require('../mailer/mailer-module')
 
 router.post('/gaweb/sendmail', nodemailer.SendMail);
 
+//==========Upload files ========================================
+var uploadfiles = require('../uploadfiles/dist/index')
+
+router.post('/gaweb/profile', uploadfiles.profile);
 //=============Roles ==========================================
 var rol = require('../controllers/rol');
 

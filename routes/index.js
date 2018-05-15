@@ -12,7 +12,6 @@ router.get('/', function(req, res, next) {
 var empleados = require('../controllers/empleados');
 router.get('/gaweb/users', empleados.getAllUsers);
 router.get('/gaweb/users/:id', empleados.getSingleUser);
-router.get('/gaweb/users/:id', empleados.getSingleUserName);
 router.post('/gaweb/createuser', empleados.createUser);
 router.put('/gaweb/updateser', empleados.updateUser);
 router.delete('/gaweb/usuarios/:id', empleados.removeUser);//Elimina el empleado correspondiente al id dado
@@ -20,8 +19,9 @@ router.delete('/gaweb/usuarios/:id', empleados.removeUser);//Elimina el empleado
 //==============LOGIN==========================================
 var log = require('../controllers/users');
 
-router.post('/gAweb/loguear', log.loginUSer);
-router.post('/gaweb/createuser', log.saveUSer);
+router.post('/gAweb/loguear', log.loginUser);
+//router.post('/gaweb/createuser', log.saveUSer);
+//router.post('/gaweb/loguser', log.loguser);
 
 //==========Mailer ============================================
 var nodemailer = require('../mailer/mailer-module')
@@ -29,9 +29,10 @@ var nodemailer = require('../mailer/mailer-module')
 router.post('/gaweb/sendmail', nodemailer.SendMail);
 
 //==========Upload files ========================================
-var uploadfiles = require('../uploadfiles/dist/index')
+var uploadfiles = require('../uploadfiles/files')
 
-router.post('/gaweb/profile', uploadfiles.profile);
+router.post('/gaweb/profile', uploadfiles.createfile);
+router.post('/gaweb/uploadMedia', uploadfiles.uploadMedia);
 //=============Roles ==========================================
 var rol = require('../controllers/rol');
 

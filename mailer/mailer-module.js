@@ -19,8 +19,8 @@ var transporter = nodemailer.createTransport({
 
 // setup e-mail data
 var mailOptions = {
-  from: '"gaweb" <jenamorado@grupoassa.com>', // quien envia
-    to: 'lsaenz@grupoassa.com', // quien recibe
+  from: '"gaweb" <usuario@grupoassa.com>', // quien envia
+    to: 'usuario@grupoassa.com', // quien recibe
     subject: 'Prueba de Mail ', // Asunto del mail
     text: 'Esto es un mail de prueba ', // plaintext body
     html: '<b>Prueba de mail </b><br> Envie este mail con Node' // html body

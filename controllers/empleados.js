@@ -1,20 +1,23 @@
 var db = require('../db');
 var config = require('config');
 var dbConfig = config.get('dbConfig');
+const bcrypt = require('bcrypt');
 
 /*************************************************
 
 Info de las tabla Users
 ***************************************************
-user_id serial NOT NULL,
- firstname character varying(100),
- lastname character varying(100),
- role_id integer NOT NULL,
- active boolean NOT NULL DEFAULT true,
- password text,
- CONSTRAINT users_pkey PRIMARY KEY (user_id),
- CONSTRAINT fk_users_roles_id FOREIGN KEY (role_id)
-     REFERENCES gaweb.roles (role_id) MATCH FULL
+ id serial NOT NULL,
+ username character varying(50) NOT NULL,
+ password character varying(50) NOT NULL,
+ firstname character varying(50) NOT NULL,
+ lastname character varying(50) NOT NULL,
+ email character varying(50),
+ active boolean NOT NULL,
+ role_id integer,
+ CONSTRAINT users_pk PRIMARY KEY (id),
+ CONSTRAINT users_roles_fk FOREIGN KEY (role_id)
+     REFERENCES gaweb.roles (role_id) MATCH SIMPLE
      ON UPDATE NO ACTION ON DELETE NO ACTION
 
 **************************************************/
@@ -38,30 +41,8 @@ function getAllUsers(req, res){
 }
 
 function getSingleUser(req,res,next){
-  var userID = req.params.user;
-  db.one('select * from '+ dbConfig.schema + '.users where firstname=$2', userID)
-    .then(function (data)
-    {
-      res.status(200)
-        .send({
-          data: data
-        });
-    })
-    .catch(function (err)
-    {
-      if(err.received == 0)
-      {
-        res.status(404).send({message: 'No se ha encontrado el usuario'});
-        console.log(err);
-      }else{
-        res.status(500).send({message:'Error en el servidor'+err});
-      }
-    });
-}
-
-function getSingleUserName(req,res,next){
-  var usuario = '%'+req.params.user+'%';
-  db.any('select * from '+ dbConfig.schema + '.users where upper(firstname) like upper($1) or upper(lastname) like upper($1)  or upper(user_id) like upper($1)', usuario)
+  var userID = params.username;
+  db.one('select * from '+ dbConfig.schema + '.users where username=$1',  [params.username])
     .then(function (data)
     {
       res.status(200)
@@ -85,13 +66,16 @@ function getSingleUserName(req,res,next){
 //==================== CRUD ======================
 
 function createUser(req, res, next){
+  let hash = bcrypt.hashSync('password', 10);
   var user ={
-    user_id:req.body.user_id,
+    id:req.body.id,
+    username:req.body.username,
+    password:hash,
     firstname:req.body.firstname,
     lastname:req.body.lastname,
-    role_id:req.body.role_id,
-    active:req.body.active,
-    password:req.body.password
+    email:req.body.email,
+    active: req.body.active,
+    role_id:req.body.role_id
   };
   insertar(user, function(data){
     res.send({data: data});
@@ -100,9 +84,11 @@ function createUser(req, res, next){
 }
 
 function insertar(user,callback){
-    db.none('insert into '+ dbConfig.schema + '.users(user_id,firstname, lastname, role_id, active, password)' +
-        'values($1, $2, $3, $4, $5, $6)',
-      [user.user_id,user.firstname, user.lastname, user.role_id, user.active, user.password])
+  console.log(user);
+    db.none('insert into '+ dbConfig.schema + '.users(username, password, firstname, lastname, email, active, role_id)' +
+        'values($1, $2, $3, $4, $5, $6, $7)',
+      [ user.username ,user.password, user.firstname, user.lastname, user.email, user.active, user.role_id])
+
       .then(function () {
 
         var data='Inserción exitosa';
@@ -122,9 +108,9 @@ function insertar(user,callback){
 }
 
 
-function actualizar(user,id,callback){                      //id_user,firstname, lastname, role_id, active, password
-  db.none('update'+ dbConfig.schema + '.users set user_id=$1, firstname=$2, lastname=$3, rol_id=$4, active=$5, password=$6',
-  [user.user_id, user.firstname, user.lastname, user.rol_id, user.active, user.password,
+function actualizar(user,id,callback){                      //username, password, firstname, lastname, email, active, role_id
+  db.none('update'+ dbConfig.schema + '.users set username=$1, password=$2, firstname=$3, lastname=$4, email=$5, active=$6, role_id=7',
+  [user.username, user.password, user.firstname, user.lastname, user.email, user.active, user.role_id,
     id])
     .then(function(){
       var data = 'Se logro actulizar exitosamente!'
@@ -151,7 +137,7 @@ function updateUser(req, res, next) {
 
 function removeUser(req, res, next) {
   var usrID = parseInt(req.params.user_id);
-  db.result('delete from '+ dbConfig.schema + '.users where id_user= $1', usrID)
+  db.result('delete from '+ dbConfig.schema + '.users where username = $1', usrID)
     .then(function (result) {
       res.status(200)
         .send({
@@ -181,7 +167,7 @@ function removeAll(req, res, next) {
     }
     for (var paso = ini; paso >= fin; paso++) {
 
-      db.result('delete from '+ dbConfig.schema + '.usuarios where id_user= $1', paso)
+      db.result('delete from '+ dbConfig.schema + '.usuarios where username= $1', paso)
         .then(function (result) {
           console.log({
               status: 'success',
@@ -204,7 +190,7 @@ function removeAll(req, res, next) {
 }
 
 function existe(user, callback){
-  db.one('select * from'+ dbConfig.schema+ 'users where firstname=2$ and lastname =3$,'[user.firstname, user.lastname])
+  db.one('select * from'+ dbConfig.schema+ 'users where username=1$ and email =2$,'[user.username, user.email])
     .then(function (data)
     {
       callback(parseInt(dat.id));
@@ -217,7 +203,6 @@ function existe(user, callback){
 
 module.exports = {
   getAllUsers,
-  getSingleUserName,
   getSingleUser,
   createUser,
   updateUser,

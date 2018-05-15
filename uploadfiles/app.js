@@ -1,45 +1,27 @@
-/*var express = require('express');
-var formidable = require('formidable');
+/*const express = require('express');
+const fileUpload = require('express-fileupload');
+const app = express();
+const http = require('http');
+http.Server(app).listen(80);
 
-var app = express();
+// default options
+app.use(fileUpload());
 
-function uploadFile(req, res){
-  app.post('/', function (req, res){
-      var form = new formidable.IncomingForm();
+console.log("Server Started at port 80");
 
-      form.parse(req);
+app.post('/upload', function(req, res) {
+  if (!req.files)
+    return res.status(400).send('No files were uploaded.');
 
-      form.on('fileBegin', function (name, file){
-          file.path = __dirname + '/uploads/' + file.name;
-      });
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+  let sampleFile = req.files.sampleFile;
 
-      form.on('file', function (name, file){
-          console.log('Uploaded ' + file.name);
-      });
+  // Use the mv() method to place the file somewhere on your server
+  sampleFile.mv('uploads', function(err) {
+    if (err)
+      return res.status(500).send(err);
 
-      res.sendFile({
-        __dirname,
-        message:'Exito'
-      });
+    res.send('File uploaded!');
   });
-}
-/*app.post('/', function (req, res){
-    var form = new formidable.IncomingForm();
-
-    form.parse(req);
-
-    form.on('fileBegin', function (name, file){
-        file.path = __dirname + '/uploads/' + file.name;
-    });
-
-    form.on('file', function (name, file){
-        console.log('Uploaded ' + file.name);
-    });
-
-    res.sendFile(__dirname + '/index.html');
 });
-
-module.exports = {
-  uploadFile,
-
-}*/
+*/
